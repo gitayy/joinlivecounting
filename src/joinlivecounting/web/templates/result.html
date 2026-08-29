@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ heading }}</title>
+{% if auto %}<meta http-equiv="refresh" content="{{ delay|round(0, 'ceil')|int }};url={{ target }}">{% endif %}
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100dvh; padding: 6vw;
+    display: flex; align-items: center; justify-content: center;
+    font: clamp(1rem, 3.6vw, 1.2rem)/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: #f6f7f9; color: #16181c;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { background: #0f1114; color: #e8eaed; }
+    .detail { background: #101214; border-color: #2a2e35; }
+  }
+
+  main { width: 100%; max-width: 44rem; }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(2.2rem, 11vw, 4rem);
+    line-height: 1.1; letter-spacing: -0.02em; font-weight: 700;
+  }
+
+  .pending { text-align: center; }
+  .pending .spinner {
+    width: clamp(2.6rem, 12vw, 4rem); height: clamp(2.6rem, 12vw, 4rem);
+    margin: 0 auto clamp(1.4rem, 5vw, 2.2rem);
+    border: clamp(3px, 1vw, 5px) solid currentColor;
+    border-top-color: transparent; border-radius: 50%;
+    opacity: .45; animation: spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    .pending .spinner { animation: none; border-top-color: currentColor; opacity: .25; }
+  }
+
+  .message { margin: 1rem 0 0; }
+
+  .detail {
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: .85em; white-space: pre-wrap; word-break: break-word;
+    background: #f1f3f5; border: 1px solid #e2e5ea; border-radius: 10px;
+    padding: .9rem 1rem; margin: 1.4rem 0 0;
+  }
+
+  .fallback {
+    margin: clamp(2rem, 8vw, 3.5rem) 0 0;
+    font-size: .82em; opacity: .65; word-break: break-all;
+  }
+  a { color: #d93a00; }
+
+  .btn {
+    display: inline-block; margin-top: clamp(1.6rem, 6vw, 2.6rem);
+    padding: .7em 1.5em; font: inherit; font-size: .95em;
+    color: inherit; background: none; cursor: pointer;
+    border: 1px solid currentColor; border-radius: 999px; opacity: .8;
+  }
+  .btn:hover, .btn:focus-visible { opacity: 1; }
+  a.btn { text-decoration: none; }
+
+  .pending .fallback {
+    visibility: hidden;
+    animation: reveal 0s linear 5s forwards;
+  }
+  @keyframes reveal { to { visibility: visible; } }
+</style>
+</head>
+<body>
+  <main class="{{ outcome }}{% if auto %} pending{% endif %}">
+    {% if auto %}<div class="spinner" aria-hidden="true"></div>{% endif %}
+    <h1>{{ heading }}</h1>
+    {% if message %}<p class="message">{{ message }}</p>{% endif %}
+    {% if detail %}<div class="detail">{{ detail }}</div>{% endif %}
+    {% if auto %}
+    <p class="fallback">
+      If you were not redirected, please click here:
+      <a href="{{ target }}">{{ target }}</a>
+    </p>
+    {% elif target %}
+    <a class="btn" href="{{ target }}">Go to the thread</a>
+    {% else %}
+    <button class="btn" type="button" onclick="history.back()">Go back</button>
+    {% endif %}
+  </main>
+{% if auto %}<script>
+setTimeout(function () { location.replace({{ target|tojson }}); }, {{ (delay * 1000)|int }});
+</script>{% endif %}
+</body>
+</html>

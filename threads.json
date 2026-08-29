@@ -1,0 +1,34 @@
+{
+  "defaults": {
+    "permissions": [
+      "update"
+    ],
+    "welcome_template": "*/u/{user} has joined the thread*",
+    "max_contributors": 9900,
+    "rate_limits": [
+      {
+        "seconds": 60,
+        "max": 10
+      },
+      {
+        "seconds": 3600,
+        "max": 300
+      },
+      {
+        "seconds": 86400,
+        "max": 600
+      }
+    ]
+  },
+  "threads": {
+    "ta535s1hq2je": {
+      "name": "livecounting"
+    },
+    "10itxw66978go": {
+      "name": "bars"
+    },
+    "yrnkgszr6zdu": {
+      "name": "slow"
+    }
+  }
+}
